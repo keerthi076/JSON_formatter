@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>JSON formatter</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Dongle:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+	<h1>JSON FORMATTER</h1>
+	<input type="file"><br>
+	<textarea style="display:none"></textarea><br>
+	<button id="format">Format</button>
+	
+	<button id="download">Download</button>
+	<button id="clear">Clear</button>
+	
+</div>
+
+</body>
+
+<style>
+	textarea{
+       max-width:490px;
+       width:100%;
+       height:200px;
+       border-width:0.1px;
+       border-style:none;
+       overflow-y:auto;
+	}
+	input{
+		width:160px;
+
+	}
+	h1{
+		
+		margin:none;
+		background-color:#56E6D3;
+	}
+	body{
+		align-items:center;
+		justify-content:center;
+		display:flex;
+		text-align:center;
+		font-family:'dongle',sans-serif;
+		font-weight: bold;
+		margin-top:100px;
+	}
+	button{
+		text-align:center;
+		padding:5px;
+		margin:3px;
+		
+		background-color:#56E6D3;
+		border:none;
+		border-radius:4px;
+		font-weight:bold;
+		font-size:15px;
+
+	}
+	button:hover{
+		background-color:grey;
+	}
+	
+	.container{
+		border-radius:4px;
+		border-width:1px;
+		border-style:none;
+		width:500px;
+		height:400px;
+		justify-content:center;
+		box-shadow:0px 3px 11px rgb(0 0 0/0.2);
+
+	}
+</style>
+	<script>
+
+		const read= new FileReader();
+		const file=document.querySelector("input");
+	const toFormat=document.querySelector("textarea");
+	const formatbutton=document.querySelector("button");
+	file.addEventListener("change",function(){
+		const read= new FileReader();
+		read.onload =()=>{
+			toFormat.style.display="block";
+			toFormat.textContent=read.result;
+        }
+        read.readAsText(this.files[0]);
+
+	})
+	$("#format").click(function(){
+	
+	toFormat.style.display="block";
+ const formatted=JSON.stringify(JSON.parse(toFormat.value), null, 4);
+	   toFormat.value=formatted;
+	 
+	});
+
+$("#clear").click(function(){
+
+	toFormat.value='';
+	file.value='';
+	toFormat.style.display="none";
+})
+$("#download").click(function(){
+	
+	var text=toFormat.value;
+    var filename = "FormattedFile.txt";
+    download(filename, text);
+});
+function download(filename,textinput){
+	const formatted=JSON.stringify(JSON.parse(toFormat.value), null, 4);
+	if(toFormat.value==formatted){
+	var el=document.createElement('a');
+	el.setAttribute('href','data:text/plain;charset=utf-8, ' +encodeURIComponent(toFormat.value));
+	el.setAttribute('download',filename);
+	document.body.appendChild(el);
+	el.click();
+	document.body.removeChild(el);
+}
+}
+
+</script>
+
+
